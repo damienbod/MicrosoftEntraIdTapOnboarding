@@ -1,4 +1,4 @@
-# Azure AD TAP Onboarding
+# Azure AD Temporary Access Pass (TAP) Onboarding
 
 # Links
 
