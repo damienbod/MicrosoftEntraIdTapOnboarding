@@ -52,15 +52,19 @@ public class AadGraphSdkManagedIdentityAppClient
         //var invitedUser = await InviteGuestUser(userModel, "https://localhost:5002");
         //return (invitedUser!.InvitedUserEmailAddress, invitedUser!.Id);
 
-        var createdUser = await CreateFederatedNoPasswordAsync(userModel);
-        return createdUser;
-
-        //var createdUser = await CreateSameDomainUserAsync(userModel);
-        //return createdUser;
-
+        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        {
+            var createdUser = await CreateMemberUserAsync(userModel);
+            return createdUser;
+        }
+        else
+        {
+            var createdUser = await CreateGuestAsync(userModel);
+            return createdUser;
+        }
     }
 
-    private async Task<(string? Upn, string? Id)> CreateSameDomainUserAsync(UserModel userModel)
+    private async Task<(string? Upn, string? Id)> CreateMemberUserAsync(UserModel userModel)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
@@ -91,7 +95,7 @@ public class AadGraphSdkManagedIdentityAppClient
         return (createdUser.UserPrincipalName, createdUser.Id);
     }
 
-    private async Task<(string? Upn, string? Id)> CreateFederatedNoPasswordAsync(UserModel userModel)
+    private async Task<(string? Upn, string? Id)> CreateGuestAsync(UserModel userModel)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
@@ -104,7 +108,8 @@ public class AadGraphSdkManagedIdentityAppClient
             UserType = GetUserType(userModel),
 
             AccountEnabled = true,
-            UserPrincipalName = userModel.Email,
+
+            UserPrincipalName = GetUpn(userModel),
             MailNickname = userModel.UserName,
 
             Identities = new List<ObjectIdentity>()
@@ -114,9 +119,16 @@ public class AadGraphSdkManagedIdentityAppClient
                     SignInType = "federated",
                     Issuer = _aadIssuerDomain,
                     IssuerAssignedId = userModel.Email
-                },
-            }
+                }
+            },
+            PasswordProfile = new PasswordProfile
+            {
+                Password = "ffDs2a2rf-2Wf(_",
+                ForceChangePasswordNextSignIn = false
+            },
+            PasswordPolicies = "DisablePasswordExpiration"
         };
+
 
         var createdUser = await graphServiceClient.Users
             .Request()
@@ -160,4 +172,13 @@ public class AadGraphSdkManagedIdentityAppClient
         return userType;
     }
 
+    private string GetUpn(UserModel userModel)
+    {
+        if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        {
+            return $"{userModel.Email.Replace('@', '_')}#EXT#@{_aadIssuerDomain}";
+        }
+
+        return userModel.Email;
+    }
 }
