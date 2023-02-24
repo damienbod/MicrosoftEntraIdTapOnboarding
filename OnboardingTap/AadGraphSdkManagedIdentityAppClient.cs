@@ -1,4 +1,4 @@
-﻿using Microsoft.Graph;
+﻿using Microsoft.Graph.Beta.Models;
 
 namespace OnboardingTap;
 
@@ -14,14 +14,37 @@ public class AadGraphSdkManagedIdentityAppClient
         _graphService = graphService;
     }
 
-    public async Task<int> GetUsersAsync()
+    public async Task<long?> GetUsersAsync()
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
-        IGraphServiceUsersCollectionPage users = await graphServiceClient.Users
-            .Request()
+        UserCollectionResponse? users = await graphServiceClient.Users
             .GetAsync();
 
-        return users.Count;
+        //IGraphServiceUsersCollectionPage users = await graphServiceClient.Users
+        //    .Request()
+        //    .GetAsync();
+
+        return users!.OdataCount;
     }
+
+    public async Task<TemporaryAccessPassAuthenticationMethod?> AddTapForUserAsync(string userId)
+    {
+        var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
+
+        var temporaryAccessPassAuthenticationMethod = new TemporaryAccessPassAuthenticationMethod
+        {
+            StartDateTime = DateTimeOffset.UtcNow,
+            LifetimeInMinutes = 60,
+            IsUsableOnce = true
+        };
+
+        var result = await graphServiceClient.Users[userId]
+            .Authentication
+            .TemporaryAccessPassMethods
+            .PostAsync(temporaryAccessPassAuthenticationMethod);
+
+        return result;
+    }
+
 }

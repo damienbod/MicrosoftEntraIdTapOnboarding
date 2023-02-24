@@ -1,5 +1,5 @@
 ﻿using Azure.Identity;
-using Microsoft.Graph;
+using Microsoft.Graph.Beta;
 
 namespace OnboardingTap;
 
