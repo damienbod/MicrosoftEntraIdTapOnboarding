@@ -47,18 +47,21 @@ public class AadGraphSdkManagedIdentityAppClient
         return result;
     }
 
-    public async Task<(string? Upn, string? Id)> CreateUser(UserModel userModel,  bool asGuest)
+    public async Task<(string? Upn, string? Id)> CreateUser(UserModel userModel)
     {
-        if (!asGuest)
-        {
-            var user = await CreateSameDomainUserAsync(userModel);
-            return user;
-        }
-        else
-        {
-            var user = await CreateFederatedNoPasswordAsync(userModel);
-            return user;
-        }
+        var user = await CreateFederatedNoPasswordAsync(userModel);
+        return user;
+
+        //if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        //{
+        //    var user = await CreateSameDomainUserAsync(userModel);
+        //    return user;
+        //}
+        //else
+        //{
+        //    var user = await CreateFederatedNoPasswordAsync(userModel);
+        //    return user;
+        //}
     }
 
     private async Task<(string? Upn, string? Id)> CreateSameDomainUserAsync(UserModel userModel)
@@ -111,6 +114,11 @@ public class AadGraphSdkManagedIdentityAppClient
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
             OtherMails = new List<string> { userModel.Email },
+
+            AccountEnabled = true,
+            UserPrincipalName = userModel.Email,
+            MailNickname = userModel.UserName,
+
             Identities = new List<ObjectIdentity>()
             {
                 new ObjectIdentity

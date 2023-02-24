@@ -34,7 +34,7 @@ public class OnboardingAdminModel : PageModel
         if(UserData != null)
         {
             var createdUser = await _aadGraphSdkManagedIdentityAppClient.CreateUser(
-                UserData, false);
+                UserData);
 
             if (createdUser!.Id != null)
             {
