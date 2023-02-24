@@ -1,4 +1,5 @@
-﻿using Microsoft.Graph.Beta.Models;
+﻿using Microsoft.Graph.Beta;
+using Microsoft.Graph.Beta.Models;
 
 namespace OnboardingTap;
 
@@ -28,6 +29,46 @@ public class AadGraphSdkManagedIdentityAppClient
         return users!.OdataCount;
     }
 
+    public async Task<Invitation?> InviteUser(UserModel userModel, string redirectUrl, bool asGuest)
+    {
+        var userType = "Guest";
+        if(!asGuest) userType = "Member";
+
+        var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
+
+        var invitation = new Invitation
+        {
+            InvitedUserEmailAddress = userModel.Email,
+            InvitedUser = new User
+            {
+                GivenName = userModel.FirstName,
+                Surname = userModel.LastName,
+                DisplayName = $"{userModel.FirstName} {userModel.LastName}",
+                Mail = userModel.Email,
+                UserType = userType,
+                OtherMails = new List<string> { userModel.Email },
+                //Identities = new List<ObjectIdentity>
+                //{
+                //    new ObjectIdentity
+                //    {
+                //        SignInType = "federated",
+                //        Issuer = _federatedDomainDomain,
+                //        IssuerAssignedId = userModel.Email
+                //    },
+                //},
+                //PasswordPolicies = "DisablePasswordExpiration"
+            },
+            SendInvitationMessage = true,
+            InviteRedirectUrl = redirectUrl,
+            InvitedUserType = "guest" // default is guest,member
+        };
+
+        var invite = await graphServiceClient.Invitations
+            .PostAsync(invitation);
+
+        return invite;
+    }
+
     public async Task<TemporaryAccessPassAuthenticationMethod?> AddTapForUserAsync(string userId)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
@@ -46,5 +87,4 @@ public class AadGraphSdkManagedIdentityAppClient
 
         return result;
     }
-
 }
