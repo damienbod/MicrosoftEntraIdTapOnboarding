@@ -20,24 +20,29 @@ public class OnboardingAdminModel : PageModel
 
     public void OnGet()
     {
-        UserData.Email = "tst@damienbodsharepoint.onmicrosoft.com";
+        UserData = new UserModel
+        {
+            Email = "tst4@damienbodsharepoint.onmicrosoft.com",
+            UserName = "tst4",
+            LastName = "last-tst4",
+            FirstName = "first-tst4"
+        };
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-
         if(UserData != null)
         {
-            var invitedUser = await _aadGraphSdkManagedIdentityAppClient.InviteUser(
-                UserData, "https://localhost:5002", false);
+            var createdUser = await _aadGraphSdkManagedIdentityAppClient.CreateUser(
+                UserData, false);
 
-            if (invitedUser!.Id != null)
+            if (createdUser!.Id != null)
             {
-                var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(invitedUser.Id);
+                var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
 
                 Tap = new TapDataModel
                 {
-                    Email = invitedUser.InvitedUserEmailAddress,
+                    Email = createdUser.Upn,
                     AccessCode = tap!.TemporaryAccessPass
                 };
             }
