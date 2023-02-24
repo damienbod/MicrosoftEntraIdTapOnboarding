@@ -46,6 +46,13 @@
 
 <p>Email: @Model.AccessInfo!.Email</p>
 
-<p>TemporaryAccessPass: @Model.AccessInfo!.TemporaryAccessPass</p>
+@if (@Model.AccessInfo.TemporaryAccessPass != null)
+{
+    <p>TemporaryAccessPass: @Model.AccessInfo.TemporaryAccessPass</p>
+}
+@if (@Model.AccessInfo.Password != null)
+{
+    <p>Password: @Model.AccessInfo!.Password</p>
+}
 
-<p>Password: @Model.AccessInfo!.Password</p>
+

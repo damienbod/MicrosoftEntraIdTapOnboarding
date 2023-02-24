@@ -39,6 +39,9 @@ public class OnboardingAdminModel : PageModel
         // member user, can use a TAP
         if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()) && createdUser!.Id != null)
         {
+            // Graph needs a pause here...
+            Thread.Sleep(5000);
+
             var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
 
             AccessInfo = new CreatedAccessModel
