@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Graph;
+using System.Security.Cryptography;
 
 namespace OnboardingTap;
 
@@ -47,25 +48,9 @@ public class AadGraphSdkManagedIdentityAppClient
         return result;
     }
 
-    public async Task<(string? Upn, string? Id)> CreateUser(UserModel userModel)
+    public async Task<(string? Upn, string? Id, string password)> CreateMemberUserAsync(UserModel userModel)
     {
-        //var invitedUser = await InviteGuestUser(userModel, "https://localhost:5002");
-        //return (invitedUser!.InvitedUserEmailAddress, invitedUser!.Id);
-
-        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-        {
-            var createdUser = await CreateMemberUserAsync(userModel);
-            return createdUser;
-        }
-        else
-        {
-            var createdUser = await CreateGuestAsync(userModel);
-            return createdUser;
-        }
-    }
-
-    private async Task<(string? Upn, string? Id)> CreateMemberUserAsync(UserModel userModel)
-    {
+        var password = GetRandomString();
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
         if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
@@ -84,7 +69,7 @@ public class AadGraphSdkManagedIdentityAppClient
             UserType = GetUserType(userModel),
             PasswordProfile = new PasswordProfile
             {
-                Password = "ffDs2a2rf-2Wf(_",
+                Password = password,
                 ForceChangePasswordNextSignIn = false
             },
             PasswordPolicies = "DisablePasswordExpiration"
@@ -92,13 +77,14 @@ public class AadGraphSdkManagedIdentityAppClient
 
         var createdUser = await graphServiceClient.Users.Request().AddAsync(user);
 
-        return (createdUser.UserPrincipalName, createdUser.Id);
+        return (createdUser.UserPrincipalName, createdUser.Id, password);
     }
 
-    private async Task<(string? Upn, string? Id)> CreateGuestAsync(UserModel userModel)
+    public async Task<(string? Upn, string? Id, string password)> CreateGuestAsync(UserModel userModel)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
+        var password = GetRandomString();
         var user = new User
         {
             DisplayName = userModel.UserName,
@@ -106,12 +92,9 @@ public class AadGraphSdkManagedIdentityAppClient
             GivenName = userModel.FirstName,
             OtherMails = new List<string> { userModel.Email },
             UserType = GetUserType(userModel),
-
             AccountEnabled = true,
-
             UserPrincipalName = GetUpn(userModel),
             MailNickname = userModel.UserName,
-
             Identities = new List<ObjectIdentity>()
             {
                 new ObjectIdentity
@@ -123,18 +106,17 @@ public class AadGraphSdkManagedIdentityAppClient
             },
             PasswordProfile = new PasswordProfile
             {
-                Password = "ffDs2a2rf-2Wf(_",
+                Password = password,
                 ForceChangePasswordNextSignIn = false
             },
             PasswordPolicies = "DisablePasswordExpiration"
         };
 
-
         var createdUser = await graphServiceClient.Users
             .Request()
             .AddAsync(user);
 
-        return (createdUser.UserPrincipalName, createdUser.Id);
+        return (createdUser.UserPrincipalName, createdUser.Id, password);
     }
 
     public async Task<Invitation?> InviteGuestUser(UserModel userModel, string redirectUrl)
@@ -180,5 +162,16 @@ public class AadGraphSdkManagedIdentityAppClient
         }
 
         return userModel.Email;
+    }
+
+    private static string GetRandomString()
+    {
+        var random = $"{GenerateRandom()}{GenerateRandom()}{GenerateRandom()}{GenerateRandom()}-AC";
+        return random;
+    }
+
+    private static int GenerateRandom()
+    {
+        return RandomNumberGenerator.GetInt32(100000000, int.MaxValue);
     }
 }

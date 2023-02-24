@@ -1,9 +1,11 @@
 ﻿namespace OnboardingTap.Pages
 {
-    public class TapDataModel
+    public class CreatedAccessModel
     {
         public string? Email { get; set; }
 
-        public string? AccessCode { get; set; }
+        public string? TemporaryAccessPass { get; set; }
+
+        public string? Password { get; set; }
     }
 }

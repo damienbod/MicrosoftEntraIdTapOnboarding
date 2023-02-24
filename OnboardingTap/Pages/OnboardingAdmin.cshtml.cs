@@ -6,6 +6,7 @@ namespace OnboardingTap.Pages;
 public class OnboardingAdminModel : PageModel
 {
     private readonly AadGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
+    private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
 
     public OnboardingAdminModel(AadGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient)
     {
@@ -16,7 +17,7 @@ public class OnboardingAdminModel : PageModel
     public UserModel? UserData { get; set; } = new UserModel();
 
     [BindProperty]
-    public TapDataModel? Tap { get; set; } = new TapDataModel();
+    public CreatedAccessModel? AccessInfo { get; set; } = new CreatedAccessModel();
 
     public void OnGet()
     {
@@ -31,21 +32,39 @@ public class OnboardingAdminModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if(UserData != null)
+        (string? Upn, string? Id, string Password) createdUser;
+        if (UserData != null)
         {
-            var createdUser = await _aadGraphSdkManagedIdentityAppClient.CreateUser(
-                UserData);
-
-            if (createdUser!.Id != null)
+            if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
             {
-                var tap = await _aadGraphSdkManagedIdentityAppClient
-                    .AddTapForUserAsync(createdUser.Id);
+                createdUser = await _aadGraphSdkManagedIdentityAppClient
+                    .CreateMemberUserAsync(UserData);
 
-                Tap = new TapDataModel
+                if (createdUser!.Id != null)
                 {
-                    Email = createdUser.Upn,
-                    AccessCode = tap!.TemporaryAccessPass
-                };
+                    var tap = await _aadGraphSdkManagedIdentityAppClient
+                        .AddTapForUserAsync(createdUser.Id);
+
+                    AccessInfo = new CreatedAccessModel
+                    {
+                        Email = createdUser.Upn,
+                        TemporaryAccessPass = tap!.TemporaryAccessPass
+                    };
+                }
+            }
+            else
+            {
+                createdUser = await _aadGraphSdkManagedIdentityAppClient
+                    .CreateGuestAsync(UserData);
+
+                if (createdUser!.Id != null)
+                {
+                    AccessInfo = new CreatedAccessModel
+                    {
+                        Email = createdUser.Upn,
+                        Password = createdUser.Password
+                    };
+                }
             }
         }
 
