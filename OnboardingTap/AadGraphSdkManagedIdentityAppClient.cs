@@ -33,9 +33,9 @@ public class AadGraphSdkManagedIdentityAppClient
 
         var tempAccessPassAuthMethod = new TemporaryAccessPassAuthenticationMethod
         {
-            StartDateTime = DateTimeOffset.UtcNow.AddMinutes(1),
+            //StartDateTime = DateTimeOffset.Parse(DateTimeOffset.Now.ToString("s")),
             LifetimeInMinutes = 60,
-            IsUsableOnce = true
+            IsUsableOnce = true, 
         };
 
         var result = await graphServiceClient.Users[userId]
