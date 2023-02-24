@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace OnboardingAdmin.Pages;
+namespace OnboardingTap.Pages;
 
 public class OnboardingAdminModel : PageModel
 {
