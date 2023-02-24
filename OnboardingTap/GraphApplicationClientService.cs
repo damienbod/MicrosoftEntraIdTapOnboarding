@@ -40,9 +40,9 @@ public class GraphApplicationClientService
         }
         else // dev env
         {
-            var tenantId = _configuration["AzureAd:TenantId"];
-            var clientId = _configuration.GetValue<string>("AzureAd:ClientId");
-            var clientSecret = _configuration.GetValue<string>("AzureAd:ClientSecret");
+            var tenantId = _configuration["AzureAdGraph:TenantId"];
+            var clientId = _configuration.GetValue<string>("AzureAdGraph:ClientId");
+            var clientSecret = _configuration.GetValue<string>("AzureAdGraph:ClientSecret");
 
             var options = new TokenCredentialOptions
             {
