@@ -33,7 +33,7 @@ public class AadGraphSdkManagedIdentityAppClient
 
         var tempAccessPassAuthMethod = new TemporaryAccessPassAuthenticationMethod
         {
-            //StartDateTime = DateTimeOffset.Parse(DateTimeOffset.Now.ToString("s")),
+            //StartDateTime = DateTimeOffset.Now,
             LifetimeInMinutes = 60,
             IsUsableOnce = true, 
         };
