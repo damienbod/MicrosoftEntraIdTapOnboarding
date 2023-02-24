@@ -49,14 +49,14 @@ public class AadGraphSdkManagedIdentityAppClient
 
     public async Task<(string? Upn, string? Id)> CreateUser(UserModel userModel)
     {
-        var invited = await InviteUser(userModel, "https://localhost:5002");
-        return (invited!.InvitedUserEmailAddress, invited!.Id);
+        //var invitedUser = await InviteGuestUser(userModel, "https://localhost:5002");
+        //return (invitedUser!.InvitedUserEmailAddress, invitedUser!.Id);
 
-        //var user = await CreateFederatedNoPasswordAsync(userModel);
-        //return user!;
+        var createdUser = await CreateFederatedNoPasswordAsync(userModel);
+        return createdUser;
 
-        //var user = await CreateSameDomainUserAsync(userModel);
-        //return user;
+        //var createdUser = await CreateSameDomainUserAsync(userModel);
+        //return createdUser;
 
     }
 
@@ -125,8 +125,12 @@ public class AadGraphSdkManagedIdentityAppClient
         return (createdUser.UserPrincipalName, createdUser.Id);
     }
 
-    public async Task<Invitation?> InviteUser(UserModel userModel, string redirectUrl)
+    public async Task<Invitation?> InviteGuestUser(UserModel userModel, string redirectUrl)
     {
+        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        {
+            throw new ArgumentException("user must be from a different domain!");
+        }
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
         var invitation = new Invitation
@@ -135,7 +139,7 @@ public class AadGraphSdkManagedIdentityAppClient
             SendInvitationMessage = true,
             InvitedUserDisplayName = $"{userModel.FirstName} {userModel.LastName}",
             InviteRedirectUrl = redirectUrl,
-            InvitedUserType = GetUserType(userModel)
+            InvitedUserType = "guest"
         };
 
         var invite = await graphServiceClient.Invitations
