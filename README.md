@@ -1,5 +1,7 @@
 # Azure AD Temporary Access Pass (TAP) Onboarding
 
+[![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
+
 # Links
 
 https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-authentication-temporary-access-pass
