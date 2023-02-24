@@ -60,7 +60,7 @@ public class AadGraphSdkManagedIdentityAppClient
             },
             SendInvitationMessage = true,
             InviteRedirectUrl = redirectUrl,
-            InvitedUserType = "guest" // default is guest,member
+            InvitedUserType = userType
         };
 
         var invite = await graphServiceClient.Invitations
