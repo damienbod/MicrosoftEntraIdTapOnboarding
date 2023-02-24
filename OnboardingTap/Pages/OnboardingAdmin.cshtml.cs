@@ -32,40 +32,28 @@ public class OnboardingAdminModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        (string? Upn, string? Id, string Password) createdUser;
-        if (UserData != null)
+        if (UserData == null) return Page();
+        
+        var createdUser = await _aadGraphSdkManagedIdentityAppClient.CreateGraphUserAsync(UserData);
+
+        // member user, can use a TAP
+        if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()) && createdUser!.Id != null)
         {
-            if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+            var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
+
+            AccessInfo = new CreatedAccessModel
             {
-                createdUser = await _aadGraphSdkManagedIdentityAppClient
-                    .CreateMemberUserAsync(UserData);
-
-                if (createdUser!.Id != null)
-                {
-                    var tap = await _aadGraphSdkManagedIdentityAppClient
-                        .AddTapForUserAsync(createdUser.Id);
-
-                    AccessInfo = new CreatedAccessModel
-                    {
-                        Email = createdUser.Upn,
-                        TemporaryAccessPass = tap!.TemporaryAccessPass
-                    };
-                }
-            }
-            else
+                Email = createdUser.Email,
+                TemporaryAccessPass = tap!.TemporaryAccessPass
+            };
+        }
+        else if (createdUser!.Id != null) // guest user, stuck with passwords
+        {
+            AccessInfo = new CreatedAccessModel
             {
-                createdUser = await _aadGraphSdkManagedIdentityAppClient
-                    .CreateGuestAsync(UserData);
-
-                if (createdUser!.Id != null)
-                {
-                    AccessInfo = new CreatedAccessModel
-                    {
-                        Email = createdUser.Upn,
-                        Password = createdUser.Password
-                    };
-                }
-            }
+                Email = createdUser.Email,
+                Password = createdUser.Password
+            };
         }
 
         return Page();

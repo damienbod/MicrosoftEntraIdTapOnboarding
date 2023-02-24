@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Graph;
+using OnboardingTap.Pages;
 using System.Security.Cryptography;
 
 namespace OnboardingTap;
@@ -48,39 +49,10 @@ public class AadGraphSdkManagedIdentityAppClient
         return result;
     }
 
-    public async Task<(string? Upn, string? Id, string password)> CreateMemberUserAsync(UserModel userModel)
-    {
-        var password = GetRandomString();
-        var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
-
-        if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-        {
-            throw new ArgumentException("incorrect Email domain");
-        }
-
-        var user = new User
-        {
-            AccountEnabled = true,
-            UserPrincipalName = userModel.Email,
-            DisplayName = userModel.UserName,
-            Surname = userModel.LastName,
-            GivenName = userModel.FirstName,
-            MailNickname = userModel.UserName,  
-            UserType = GetUserType(userModel),
-            PasswordProfile = new PasswordProfile
-            {
-                Password = password,
-                ForceChangePasswordNextSignIn = false
-            },
-            PasswordPolicies = "DisablePasswordExpiration"
-        };
-
-        var createdUser = await graphServiceClient.Users.Request().AddAsync(user);
-
-        return (createdUser.UserPrincipalName, createdUser.Id, password);
-    }
-
-    public async Task<(string? Upn, string? Id, string password)> CreateGuestAsync(UserModel userModel)
+    /// <summary>
+    /// Can be a guest or a member
+    /// </summary>
+    public async Task<CreatedUserModel> CreateGraphUserAsync(UserModel userModel)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
@@ -116,7 +88,12 @@ public class AadGraphSdkManagedIdentityAppClient
             .Request()
             .AddAsync(user);
 
-        return (createdUser.UserPrincipalName, createdUser.Id, password);
+        return new CreatedUserModel
+        {
+            Email = createdUser.UserPrincipalName,
+            Id = createdUser.Id,
+            Password = password
+        };
     }
 
     public async Task<Invitation?> InviteGuestUser(UserModel userModel, string redirectUrl)
