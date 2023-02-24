@@ -1,5 +1,49 @@
-﻿@page
+﻿@page "{handler?}"
 @model OnboardingAdminModel
 @{
     ViewData["Title"] = "OnboardingAdmin page";
 }
+
+<h4>Invite new user</h4>
+
+<hr />
+
+<h4>User:</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserData.Email" class="control-label">Email</label>
+                <input asp-for="UserData.Email" class="form-control" />
+                <span asp-validation-for="UserData.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserData.UserName" class="control-label">User name</label>
+                <input asp-for="UserData.UserName" class="form-control" />
+                <span asp-validation-for="UserData.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserData.FirstName" class="control-label">First name</label>
+                <input asp-for="UserData.FirstName" class="form-control" />
+                <span asp-validation-for="UserData.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserData.LastName" class="control-label">Last name</label>
+                <input asp-for="UserData.LastName" class="form-control" />
+                <span asp-validation-for="UserData.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Onboard new user</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<p>@Model.Tap!.Email</p>
+
+<p>@Model.Tap!.AccessCode</p>
