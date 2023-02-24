@@ -10,9 +10,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddSingleton<GraphApplicationClientService>();
+        builder.Services.AddScoped<AadGraphSdkManagedIdentityAppClient>();
+
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
-            .EnableTokenAcquisitionToCallDownstreamApi();
+            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 
         builder.Services.AddAuthorization(options =>
         {
