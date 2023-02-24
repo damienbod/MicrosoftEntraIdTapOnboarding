@@ -79,7 +79,7 @@ public class AadGraphSdkManagedIdentityAppClient
             PasswordProfile = new PasswordProfile
             {
                 Password = password,
-                ForceChangePasswordNextSignIn = false
+                ForceChangePasswordNextSignIn = ForcePasswordChange(userModel)
             },
             PasswordPolicies = "DisablePasswordExpiration"
         };
@@ -129,6 +129,16 @@ public class AadGraphSdkManagedIdentityAppClient
         }
 
         return userType;
+    }
+
+    private bool ForcePasswordChange(UserModel userModel)
+    {
+        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private string GetUpn(UserModel userModel)
