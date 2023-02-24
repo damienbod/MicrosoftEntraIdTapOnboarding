@@ -80,7 +80,7 @@ public class AadGraphSdkManagedIdentityAppClient
             DisplayName = userModel.UserName,
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
-            MailNickname = userModel.UserName,
+            MailNickname = userModel.UserName, 
             PasswordProfile = new PasswordProfile
             {
                 Password = "ffDs2a2rf-2Wf(_",
@@ -107,7 +107,6 @@ public class AadGraphSdkManagedIdentityAppClient
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
-        // User must already exist in AAD
         var user = new User
         {
             DisplayName = userModel.UserName,
