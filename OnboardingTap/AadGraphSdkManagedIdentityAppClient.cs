@@ -1,5 +1,5 @@
-﻿using Microsoft.Graph.Beta;
-using Microsoft.Graph.Beta.Models;
+﻿
+using Microsoft.Graph;
 
 namespace OnboardingTap;
 
@@ -16,27 +16,24 @@ public class AadGraphSdkManagedIdentityAppClient
         _graphService = graphService;
     }
 
-    public async Task<long?> GetUsersAsync()
+    public async Task<int> GetUsersAsync()
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
-        UserCollectionResponse? users = await graphServiceClient.Users
+        IGraphServiceUsersCollectionPage users = await graphServiceClient.Users
+            .Request()
             .GetAsync();
 
-        //IGraphServiceUsersCollectionPage users = await graphServiceClient.Users
-        //    .Request()
-        //    .GetAsync();
-
-        return users!.OdataCount;
+        return users.Count;
     }
 
     public async Task<TemporaryAccessPassAuthenticationMethod?> AddTapForUserAsync(string userId)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
-        var temporaryAccessPassAuthenticationMethod = new TemporaryAccessPassAuthenticationMethod
+        var tempAccessPassAuthMethod = new TemporaryAccessPassAuthenticationMethod
         {
-            StartDateTime = DateTimeOffset.UtcNow,
+            StartDateTime = DateTimeOffset.UtcNow.AddMinutes(1),
             LifetimeInMinutes = 60,
             IsUsableOnce = true
         };
@@ -44,7 +41,8 @@ public class AadGraphSdkManagedIdentityAppClient
         var result = await graphServiceClient.Users[userId]
             .Authentication
             .TemporaryAccessPassMethods
-            .PostAsync(temporaryAccessPassAuthenticationMethod);
+            .Request()
+            .AddAsync(tempAccessPassAuthMethod);
 
         return result;
     }
@@ -79,19 +77,17 @@ public class AadGraphSdkManagedIdentityAppClient
             DisplayName = userModel.UserName,
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
-            MailNickname = userModel.UserName
+            MailNickname = userModel.UserName,
+            PasswordProfile = new PasswordProfile
+            {
+                Password = "ffDs2a2rf-2Wf(_",
+                ForceChangePasswordNextSignIn = false
+            },
+            PasswordPolicies = "DisablePasswordExpiration"
         };
 
-        try
-        {
-            await graphServiceClient.Users.PostAsync(user);
-        }
-        catch(Exception ex)
-        {
-            var test = ex.Message;
-            throw ex;
-        }
-
+        var createdUser = await graphServiceClient.Users.Request().AddAsync(user);
+  
         // Needs an SPO license
         //var patchValues = new User()
         //{
@@ -101,7 +97,7 @@ public class AadGraphSdkManagedIdentityAppClient
         //var request = _graphServiceClient.Users[createdUser.Id].Request();
         //await request.UpdateAsync(patchValues);
 
-        return (user.UserPrincipalName, user.Id);
+        return (createdUser.UserPrincipalName, createdUser.Id);
     }
 
     private async Task<(string? Upn, string? Id)> CreateFederatedNoPasswordAsync(UserModel userModel)
@@ -127,8 +123,9 @@ public class AadGraphSdkManagedIdentityAppClient
         };
 
         var createdUser = await graphServiceClient.Users
-            .PostAsync(user);
+            .Request()
+            .AddAsync(user);
 
-        return (user.UserPrincipalName, user.Id);
+        return (createdUser.UserPrincipalName, createdUser.Id);
     }
 }

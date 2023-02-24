@@ -22,10 +22,10 @@ public class OnboardingAdminModel : PageModel
     {
         UserData = new UserModel
         {
-            Email = "tst4@damienbodsharepoint.onmicrosoft.com",
-            UserName = "tst4",
-            LastName = "last-tst4",
-            FirstName = "first-tst4"
+            Email = "tst5@damienbodsharepoint.onmicrosoft.com",
+            UserName = "tst5",
+            LastName = "last-tst5",
+            FirstName = "first-tst5"
         };
     }
 
@@ -38,7 +38,8 @@ public class OnboardingAdminModel : PageModel
 
             if (createdUser!.Id != null)
             {
-                var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
+                var tap = await _aadGraphSdkManagedIdentityAppClient
+                    .AddTapForUserAsync(createdUser.Id);
 
                 Tap = new TapDataModel
                 {
