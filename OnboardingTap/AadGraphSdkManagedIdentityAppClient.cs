@@ -49,19 +49,15 @@ public class AadGraphSdkManagedIdentityAppClient
 
     public async Task<(string? Upn, string? Id)> CreateUser(UserModel userModel)
     {
-        var user = await CreateFederatedNoPasswordAsync(userModel);
-        return user;
+        var invited = await InviteUser(userModel, "https://localhost:5002");
+        return (invited!.InvitedUserEmailAddress, invited!.Id);
 
-        //if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-        //{
-        //    var user = await CreateSameDomainUserAsync(userModel);
-        //    return user;
-        //}
-        //else
-        //{
-        //    var user = await CreateFederatedNoPasswordAsync(userModel);
-        //    return user;
-        //}
+        //var user = await CreateFederatedNoPasswordAsync(userModel);
+        //return user!;
+
+        //var user = await CreateSameDomainUserAsync(userModel);
+        //return user;
+
     }
 
     private async Task<(string? Upn, string? Id)> CreateSameDomainUserAsync(UserModel userModel)
@@ -80,7 +76,8 @@ public class AadGraphSdkManagedIdentityAppClient
             DisplayName = userModel.UserName,
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
-            MailNickname = userModel.UserName, 
+            MailNickname = userModel.UserName,  
+            UserType = GetUserType(userModel),
             PasswordProfile = new PasswordProfile
             {
                 Password = "ffDs2a2rf-2Wf(_",
@@ -90,15 +87,6 @@ public class AadGraphSdkManagedIdentityAppClient
         };
 
         var createdUser = await graphServiceClient.Users.Request().AddAsync(user);
-  
-        // Needs an SPO license
-        //var patchValues = new User()
-        //{
-        //    Birthday = userModel.BirthDate.ToUniversalTime()
-        //};
-
-        //var request = _graphServiceClient.Users[createdUser.Id].Request();
-        //await request.UpdateAsync(patchValues);
 
         return (createdUser.UserPrincipalName, createdUser.Id);
     }
@@ -113,6 +101,7 @@ public class AadGraphSdkManagedIdentityAppClient
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
             OtherMails = new List<string> { userModel.Email },
+            UserType = GetUserType(userModel),
 
             AccountEnabled = true,
             UserPrincipalName = userModel.Email,
@@ -135,4 +124,36 @@ public class AadGraphSdkManagedIdentityAppClient
 
         return (createdUser.UserPrincipalName, createdUser.Id);
     }
+
+    public async Task<Invitation?> InviteUser(UserModel userModel, string redirectUrl)
+    {
+        var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
+
+        var invitation = new Invitation
+        {
+            InvitedUserEmailAddress = userModel.Email,
+            SendInvitationMessage = true,
+            InvitedUserDisplayName = $"{userModel.FirstName} {userModel.LastName}",
+            InviteRedirectUrl = redirectUrl,
+            InvitedUserType = GetUserType(userModel)
+        };
+
+        var invite = await graphServiceClient.Invitations
+            .Request()
+            .AddAsync(invitation);
+
+        return invite;
+    }
+
+    private string GetUserType(UserModel userModel)
+    {
+        var userType = "guest";
+        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        {
+            userType = "member";
+        }
+
+        return userType;
+    }
+
 }
