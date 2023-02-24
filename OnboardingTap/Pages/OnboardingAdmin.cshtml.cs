@@ -8,9 +8,15 @@ public class OnboardingAdminModel : PageModel
     private readonly AadGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
     private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
 
-    public OnboardingAdminModel(AadGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient)
+    public OnboardingAdminModel(AadGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient,
+        IConfiguration configuration)
     {
         _aadGraphSdkManagedIdentityAppClient = aadGraphSdkManagedIdentityAppClient;
+        var aadDomain = configuration.GetValue<string>("AadIssuerDomain");
+        if (aadDomain != null)
+        {
+            _aadIssuerDomain = aadDomain;
+        }
     }
 
     [BindProperty]
@@ -23,7 +29,7 @@ public class OnboardingAdminModel : PageModel
     {
         UserData = new UserModel
         {
-            Email = "tst5@damienbodsharepoint.onmicrosoft.com",
+            Email = $"tst5@{_aadIssuerDomain}",
             UserName = "tst5",
             LastName = "last-tst5",
             FirstName = "first-tst5"

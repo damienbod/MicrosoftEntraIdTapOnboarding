@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Graph;
+﻿using Microsoft.Graph;
 using OnboardingTap.Pages;
 using System.Security.Cryptography;
 
@@ -7,15 +6,19 @@ namespace OnboardingTap;
 
 public class AadGraphSdkManagedIdentityAppClient
 {
-    private readonly IConfiguration _configuration;
     private readonly GraphApplicationClientService _graphService;
     private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
 
     public AadGraphSdkManagedIdentityAppClient(IConfiguration configuration, 
         GraphApplicationClientService graphService)
     {
-        _configuration = configuration;
         _graphService = graphService;
+
+        var aadDomain = configuration.GetValue<string>("AadIssuerDomain");
+        if(aadDomain != null)
+        {
+            _aadIssuerDomain = aadDomain;
+        }
     }
 
     public async Task<int> GetUsersAsync()
