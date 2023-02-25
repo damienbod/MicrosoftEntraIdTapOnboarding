@@ -49,19 +49,27 @@
 
 <hr />
 
-@if (@Model.AccessInfo != null)
+
+@if (@Model.AccessInfo!.Email != null)
 {
-    <p>Email: @Model.AccessInfo!.Email</p>
-}
-@if (@Model.AccessInfo!.TemporaryAccessPass != null)
-{
-    <p>TemporaryAccessPass: @Model.AccessInfo.TemporaryAccessPass</p>
-}
-@if (@Model.AccessInfo.Password != null)
-{
-    <p>Password: @Model.AccessInfo!.Password</p>
-}
-@if (@Model.AccessInfo.InviteRedeemUrl != null)
-{
-    <p>InviteRedeemUrl: @Model.AccessInfo!.InviteRedeemUrl</p>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@Model.AccessInfo!.Email</h5>
+            @if (@Model.AccessInfo!.TemporaryAccessPass != null)
+            {
+                <h6 class="card-subtitle mb-2 text-muted">Temporary Access Pass</h6>
+                <p class="card-text">@Model.AccessInfo.TemporaryAccessPass</p>
+            }
+            @if (@Model.AccessInfo!.Password != null)
+            {
+                <h6 class="card-subtitle mb-2 text-muted">Password</h6>
+                <p class="card-text">@Model.AccessInfo.Password</p>
+            }
+            @if (@Model.AccessInfo!.InviteRedeemUrl != null)
+            {
+                <h6 class="card-subtitle mb-2 text-muted">Invite Redeem Url</h6>
+                <p class="card-text">@Model.AccessInfo.InviteRedeemUrl</p>
+            }
+        </div>
+    </div>
 }
