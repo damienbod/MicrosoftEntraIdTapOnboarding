@@ -10,7 +10,12 @@
 - A member flow with TAP and FIDO2 auth
 - A member flow with password using email/password auth
 - A member flow with password setup and a phone auth
-- docs of different flows for onboarding 
+
+### Open tasks
+
+- Add documentation of the different onboarding flows
+- Switch to delegated Graph permissions
+- Evaluate this with a Multi-tenant App Registration using delegated flows
 
 ## Using Temporary Access Pass (TAP) with members
 
