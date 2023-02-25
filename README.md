@@ -78,3 +78,5 @@ https://damienbod.com/2022/08/02/workarounds-to-disable-azure-ad-user-using-micr
 https://damienbod.com/2022/07/11/invite-external-users-to-azure-ad-using-microsoft-graph-and-asp-net-core/
 
 https://www.youtube.com/watch?v=SuBeZ9VH8dI&t=1207s
+
+https://learn.microsoft.com/en-us/azure/active-directory/external-identities/external-identities-overview
