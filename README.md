@@ -8,56 +8,15 @@ Note: TAP only works with members and a passwordless authentication once setup
 
 ## Creating AAD member users
 
-```csharp
-// TODO
-// 1. When do I use Identities? ie: federated
-// 2. Do members need this? => no
-Identities = new List<ObjectIdentity>()
-{
-    new ObjectIdentity
-    {
-        SignInType = "federated",
-        Issuer = "ExternalAzureAD", //_aadIssuerDomain, // "ExternalAzureAD", "MicrosoftAccount", 
-        IssuerAssignedId = userModel.Email // TODO do I need this?
-    }
-},
-// TODO
-// 3. Do I need a password for guests without a federated identity? 
-// 4. Do I need a password for guests with a federated identity? 
-// 5. Are passwords required for members? => yes
-PasswordProfile = new PasswordProfile
-{
-    Password = password,
-    ForceChangePasswordNextSignIn = ForcePasswordChange(userModel)
-},
-```
+Users are created on the tenant with a known or registered domain. The member user can use a TAP to onboard or a password.
+
+When using TAP, no password is returned and the user must register a FIDO2 key, etc.
 
 ## Creating AAD guest users
 
+And email with a domain unknown or not registered on the tenant will be created using an invite.
 
-```csharp
-// TODO
-// 1. When do I use Identities? ie: federated
-// 2. Do members need this? => no
-Identities = new List<ObjectIdentity>()
-{
-    new ObjectIdentity
-    {
-        SignInType = "federated",
-        Issuer = _aadIssuerDomain, // "ExternalAzureAD", "MicrosoftAccount", 
-        IssuerAssignedId = userModel.Email // TODO do I need this?
-    }
-},
-// TODO
-// 3. Do I need a password for guests without a federated identity? => yes
-// 4. Do I need a password for guests with a federated identity? => no if the _aadIssuerDomain is used
-// 5. Are passwords required for members? => yes
-PasswordProfile = new PasswordProfile
-{
-    Password = password,
-    ForceChangePasswordNextSignIn = ForcePasswordChange(userModel)
-},
-```
+TAP cannot be used for guests.
 
 # Links
 
@@ -80,3 +39,5 @@ https://damienbod.com/2022/07/11/invite-external-users-to-azure-ad-using-microso
 https://www.youtube.com/watch?v=SuBeZ9VH8dI&t=1207s
 
 https://learn.microsoft.com/en-us/azure/active-directory/external-identities/external-identities-overview
+
+https://learn.microsoft.com/en-us/azure/active-directory/external-identities/b2b-quickstart-add-guest-users-portal
