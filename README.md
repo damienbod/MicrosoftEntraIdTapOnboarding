@@ -2,6 +2,63 @@
 
 [![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
 
+## Using Temporary Access Pass (TAP) with members
+
+Note: TAP only works with members and a passwordless authentication once setup
+
+## Creating AAD member users
+
+```csharp
+// TODO
+// 1. When do I use Identities? ie: federated
+// 2. Do members need this? => no
+Identities = new List<ObjectIdentity>()
+{
+    new ObjectIdentity
+    {
+        SignInType = "federated",
+        Issuer = "ExternalAzureAD", //_aadIssuerDomain, // "ExternalAzureAD", "MicrosoftAccount", 
+        IssuerAssignedId = userModel.Email // TODO do I need this?
+    }
+},
+// TODO
+// 3. Do I need a password for guests without a federated identity? 
+// 4. Do I need a password for guests with a federated identity? 
+// 5. Are passwords required for members? => yes
+PasswordProfile = new PasswordProfile
+{
+    Password = password,
+    ForceChangePasswordNextSignIn = ForcePasswordChange(userModel)
+},
+```
+
+## Creating AAD guest users
+
+
+```csharp
+// TODO
+// 1. When do I use Identities? ie: federated
+// 2. Do members need this? => no
+Identities = new List<ObjectIdentity>()
+{
+    new ObjectIdentity
+    {
+        SignInType = "federated",
+        Issuer = "ExternalAzureAD", //_aadIssuerDomain, // "ExternalAzureAD", "MicrosoftAccount", 
+        IssuerAssignedId = userModel.Email // TODO do I need this?
+    }
+},
+// TODO
+// 3. Do I need a password for guests without a federated identity? 
+// 4. Do I need a password for guests with a federated identity? 
+// 5. Are passwords required for members? => yes
+PasswordProfile = new PasswordProfile
+{
+    Password = password,
+    ForceChangePasswordNextSignIn = ForcePasswordChange(userModel)
+},
+```
+
 # Links
 
 https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-authentication-temporary-access-pass

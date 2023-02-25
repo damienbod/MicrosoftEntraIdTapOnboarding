@@ -70,15 +70,23 @@ public class AadGraphSdkManagedIdentityAppClient
             AccountEnabled = true,
             UserPrincipalName = GetUpn(userModel),
             MailNickname = userModel.UserName,
+
+            // TODO
+            // 1. When do I use Identities? ie: federated
+            // 2. Do members need this? => no
             Identities = new List<ObjectIdentity>()
             {
                 new ObjectIdentity
                 {
                     SignInType = "federated",
-                    Issuer = _aadIssuerDomain,
-                    IssuerAssignedId = userModel.Email
+                    Issuer = "ExternalAzureAD", //_aadIssuerDomain, // "ExternalAzureAD", "MicrosoftAccount", 
+                    IssuerAssignedId = userModel.Email // TODO do I need this?
                 }
             },
+            // TODO
+            // 3. Do I need a password for guests without a federated identity? 
+            // 4. Do I need a password for guests with a federated identity? 
+            // 5. Are passwords required for members? => yes
             PasswordProfile = new PasswordProfile
             {
                 Password = password,
