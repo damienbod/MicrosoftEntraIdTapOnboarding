@@ -20,6 +20,8 @@ TAP cannot be used for guests.
 
 # Links
 
+https://entra.microsoft.com/
+
 https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-authentication-temporary-access-pass
 
 https://learn.microsoft.com/en-us/graph/api/authentication-post-temporaryaccesspassmethods?view=graph-rest-1.0&tabs=csharp
