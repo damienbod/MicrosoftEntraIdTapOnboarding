@@ -7,9 +7,9 @@
 - A guest flow with email code
 - A guest flow with federated login
 - A guest flow with phone login (is this possible?)
-- A member flow with TAP and FIDO2 auth
-- A member flow with password using email/password auth
-- A member flow with password setup and a phone auth
+- [good] A member flow with TAP and FIDO2 auth 
+- [good] A member flow with password using email/password auth
+- [good] A member flow with password setup and a phone auth
 
 ### Open tasks
 
