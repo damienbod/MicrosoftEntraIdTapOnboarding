@@ -140,25 +140,4 @@ public class AadGraphSdkManagedIdentityAppClient
     {
         return RandomNumberGenerator.GetInt32(100000000, int.MaxValue);
     }
-
-    //private string GetUpn(UserModel userModel)
-    //{
-    //    if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-    //    {
-    //        return $"{userModel.Email.Replace('@', '_')}#EXT#@{_aadIssuerDomain}";
-    //    }
-
-    //    return userModel.Email;
-    //}
-
-    //private string GetUserType(UserModel userModel)
-    //{
-    //    var userType = "guest";
-    //    if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-    //    {
-    //        userType = "member";
-    //    }
-
-    //    return userType;
-    //}
 }
