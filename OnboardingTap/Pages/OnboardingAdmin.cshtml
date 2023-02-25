@@ -61,6 +61,9 @@
             @if (@Model.AccessInfo!.TemporaryAccessPass != null)
             {
                 <h6 class="card-subtitle mb-2 text-muted">Temporary Access Pass</h6>
+
+                <p class="card-text">Use the TAP here: <a href="https://aka.ms/mysecurityinfo">https://aka.ms/mysecurityinfo</a></p>
+
                 <p class="card-text">@Model.AccessInfo.TemporaryAccessPass</p>
             }
             @if (@Model.AccessInfo!.Password != null)
