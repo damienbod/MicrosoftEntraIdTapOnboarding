@@ -2,6 +2,16 @@
 
 [![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
 
+## Test Cases
+
+- A guest flow with email code
+- A guest flow with federated login
+- A guest flow with phone login (is this possible?)
+- A member flow with TAP and FIDO2 auth
+- A member flow with password using email/password auth
+- A member flow with password setup and a phone auth
+- docs of different flows for onboarding 
+
 ## Using Temporary Access Pass (TAP) with members
 
 Note: TAP only works with members and a passwordless authentication once setup
