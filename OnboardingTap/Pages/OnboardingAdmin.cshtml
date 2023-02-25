@@ -61,14 +61,16 @@
             {
                 <h6 class="card-subtitle mb-2 text-muted">Temporary Access Pass</h6>
 
-                <p class="card-text">Use the TAP here: <a href="https://aka.ms/mysecurityinfo">https://aka.ms/mysecurityinfo</a></p>
-
                 <p class="card-text">@Model.AccessInfo.TemporaryAccessPass</p>
+
+                <p class="card-text">Use the TAP here: <a href="https://aka.ms/mysecurityinfo">https://aka.ms/mysecurityinfo</a></p>
             }
             @if (@Model.AccessInfo!.Password != null)
             {
                 <h6 class="card-subtitle mb-2 text-muted">Password</h6>
                 <p class="card-text">@Model.AccessInfo.Password</p>
+
+                <p class="card-text">Add an authentication method here: <a href="https://aka.ms/mysecurityinfo">https://aka.ms/mysecurityinfo</a></p>
             }
             @if (@Model.AccessInfo!.InviteRedeemUrl != null)
             {
