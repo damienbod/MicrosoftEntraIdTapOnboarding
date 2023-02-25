@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Polly;
 
 namespace OnboardingTap.Pages;
 
@@ -60,19 +61,26 @@ public class OnboardingAdminModel : PageModel
 
         if (createdUser!.Id != null)
         {
-            // Graph needs a pause here...
-            Thread.Sleep(5000);
-
             if (userData.UsePasswordless)
             {
-                var tap = await _aadGraphSdkManagedIdentityAppClient
-                    .AddTapForUserAsync(createdUser.Id);
+                var maxRetryAttempts = 7;
+                var pauseBetweenFailures = TimeSpan.FromSeconds(3);
 
-                AccessInfo = new CreatedAccessModel
+                var retryPolicy = Policy
+                    .Handle<HttpRequestException>()
+                    .WaitAndRetryAsync(maxRetryAttempts, i => pauseBetweenFailures);
+
+                await retryPolicy.ExecuteAsync(async () =>
                 {
-                    Email = createdUser.Email,
-                    TemporaryAccessPass = tap!.TemporaryAccessPass
-                };
+                    var tap = await _aadGraphSdkManagedIdentityAppClient
+                        .AddTapForUserAsync(createdUser.Id);
+
+                    AccessInfo = new CreatedAccessModel
+                    {
+                        Email = createdUser.Email,
+                        TemporaryAccessPass = tap!.TemporaryAccessPass
+                    };
+                });
             }
             else
             {
