@@ -55,8 +55,13 @@ public class AadGraphSdkManagedIdentityAppClient
     /// <summary>
     /// Can be a guest or a member
     /// </summary>
-    public async Task<CreatedUserModel> CreateGraphUserAsync(UserModel userModel)
+    public async Task<CreatedUserModel> CreateGraphMemberUserAsync(UserModel userModel)
     {
+        if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        {
+            throw new ArgumentException("A guest user must be invited!");
+        }
+
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
         var password = GetRandomString();
@@ -66,31 +71,24 @@ public class AadGraphSdkManagedIdentityAppClient
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
             OtherMails = new List<string> { userModel.Email },
-            UserType = GetUserType(userModel),
+            UserType = "member",
             AccountEnabled = true,
-            UserPrincipalName = GetUpn(userModel),
+            UserPrincipalName = userModel.Email,
             MailNickname = userModel.UserName,
-
-            // TODO
-            // 1. When do I use Identities? ie: federated
-            // 2. Do members need this? => no
-            Identities = new List<ObjectIdentity>()
-            {
-                new ObjectIdentity
-                {
-                    SignInType = "federated",
-                    Issuer = "ExternalAzureAD", //_aadIssuerDomain, // "ExternalAzureAD", "MicrosoftAccount", 
-                    IssuerAssignedId = userModel.Email // TODO do I need this?
-                }
-            },
-            // TODO
-            // 3. Do I need a password for guests without a federated identity? 
-            // 4. Do I need a password for guests with a federated identity? 
-            // 5. Are passwords required for members? => yes
+            //Identities = new List<ObjectIdentity>()
+            //{
+            //    new ObjectIdentity
+            //    {
+            //        SignInType = "federated",
+            //        Issuer = _aadIssuerDomain, 
+            //        IssuerAssignedId = userModel.Email
+            //    }
+            //},
             PasswordProfile = new PasswordProfile
             {
                 Password = password,
-                ForceChangePasswordNextSignIn = ForcePasswordChange(userModel)
+                // We use TAP if a paswordless onboarding is used
+                ForceChangePasswordNextSignIn = !userModel.UsePasswordless
             },
             PasswordPolicies = "DisablePasswordExpiration"
         };
@@ -113,6 +111,7 @@ public class AadGraphSdkManagedIdentityAppClient
         {
             throw new ArgumentException("user must be from a different domain!");
         }
+
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
         var invitation = new Invitation
@@ -131,40 +130,6 @@ public class AadGraphSdkManagedIdentityAppClient
         return invite;
     }
 
-    private string GetUserType(UserModel userModel)
-    {
-        var userType = "guest";
-        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-        {
-            userType = "member";
-        }
-
-        return userType;
-    }
-
-    private bool ForcePasswordChange(UserModel userModel)
-    {
-        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-        {
-            // Using TAP, password not returned in UI
-            return false;
-        }
-
-        // Guests cannot use TAP, password returned and an update is forced
-        // Unknown how this works together with federated guests
-        return true;
-    }
-
-    private string GetUpn(UserModel userModel)
-    {
-        if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
-        {
-            return $"{userModel.Email.Replace('@', '_')}#EXT#@{_aadIssuerDomain}";
-        }
-
-        return userModel.Email;
-    }
-
     private static string GetRandomString()
     {
         var random = $"{GenerateRandom()}{GenerateRandom()}{GenerateRandom()}{GenerateRandom()}-AC";
@@ -175,4 +140,25 @@ public class AadGraphSdkManagedIdentityAppClient
     {
         return RandomNumberGenerator.GetInt32(100000000, int.MaxValue);
     }
+
+    //private string GetUpn(UserModel userModel)
+    //{
+    //    if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+    //    {
+    //        return $"{userModel.Email.Replace('@', '_')}#EXT#@{_aadIssuerDomain}";
+    //    }
+
+    //    return userModel.Email;
+    //}
+
+    //private string GetUserType(UserModel userModel)
+    //{
+    //    var userType = "guest";
+    //    if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+    //    {
+    //        userType = "member";
+    //    }
+
+    //    return userType;
+    //}
 }

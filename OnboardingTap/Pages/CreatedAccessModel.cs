@@ -7,5 +7,7 @@
         public string? TemporaryAccessPass { get; set; }
 
         public string? Password { get; set; }
+
+        public string? InviteRedeemUrl { get; set; }
     }
 }

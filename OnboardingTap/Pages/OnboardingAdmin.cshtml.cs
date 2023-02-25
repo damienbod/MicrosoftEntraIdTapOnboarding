@@ -39,30 +39,52 @@ public class OnboardingAdminModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         if (UserData == null) return Page();
-        
-        var createdUser = await _aadGraphSdkManagedIdentityAppClient.CreateGraphUserAsync(UserData);
 
         // member user, can use a TAP
-        if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()) && createdUser!.Id != null)
+        if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
         {
-            // Graph needs a pause here...
-            Thread.Sleep(5000);
+            var createdUser = await _aadGraphSdkManagedIdentityAppClient
+                .CreateGraphMemberUserAsync(UserData);
 
-            var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
-
-            AccessInfo = new CreatedAccessModel
+            if(createdUser!.Id != null)
             {
-                Email = createdUser.Email,
-                TemporaryAccessPass = tap!.TemporaryAccessPass
-            };
+                // Graph needs a pause here...
+                Thread.Sleep(5000);
+
+                if(UserData.UsePasswordless)
+                {
+                    var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
+
+                    AccessInfo = new CreatedAccessModel
+                    {
+                        Email = createdUser.Email,
+                        TemporaryAccessPass = tap!.TemporaryAccessPass
+                    };
+                }
+                else
+                {
+                    AccessInfo = new CreatedAccessModel
+                    {
+                        Email = createdUser.Email,
+                        Password= createdUser.Password
+                    };
+                }
+
+            }  
         }
-        else if (createdUser!.Id != null) // guest user, stuck with passwords
+        else
         {
-            AccessInfo = new CreatedAccessModel
+            var invitedGuestUser = await _aadGraphSdkManagedIdentityAppClient
+                .InviteGuestUser(UserData, "https://localhost:5002");
+
+            if (invitedGuestUser!.Id != null) // guest user, stuck with passwords
             {
-                Email = createdUser.Email,
-                Password = createdUser.Password
-            };
+                AccessInfo = new CreatedAccessModel
+                {
+                    Email = invitedGuestUser.InvitedUserEmailAddress,
+                    InviteRedeemUrl = invitedGuestUser.InviteRedeemUrl
+                };
+            }
         }
 
         return Page();
