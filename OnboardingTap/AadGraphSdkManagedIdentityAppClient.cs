@@ -146,9 +146,12 @@ public class AadGraphSdkManagedIdentityAppClient
     {
         if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
         {
+            // Using TAP, password not returned in UI
             return false;
         }
 
+        // Guests cannot use TAP, password returned and an update is forced
+        // Unknown how this works together with federated guests
         return true;
     }
 
