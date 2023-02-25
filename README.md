@@ -58,3 +58,9 @@ https://www.youtube.com/watch?v=SuBeZ9VH8dI&t=1207s
 https://learn.microsoft.com/en-us/azure/active-directory/external-identities/external-identities-overview
 
 https://learn.microsoft.com/en-us/azure/active-directory/external-identities/b2b-quickstart-add-guest-users-portal
+
+## Used packages
+
+Polly
+
+https://github.com/App-vNext/Polly
