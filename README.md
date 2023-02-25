@@ -4,12 +4,12 @@
 
 ## Test Cases
 
-- A guest flow with email code
-- A guest flow with federated login
-- A guest flow with phone login (is this possible?)
 - [good] A member flow with TAP and FIDO2 auth 
 - [good] A member flow with password using email/password auth
 - [good] A member flow with password setup and a phone auth
+- A guest flow with email code
+- [good] A guest flow with federated login
+- A guest flow with phone login (is this possible?)
 
 ### Open tasks
 
