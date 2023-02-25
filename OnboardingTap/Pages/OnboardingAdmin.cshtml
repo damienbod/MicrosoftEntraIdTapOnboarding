@@ -14,8 +14,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="UserData.Email" class="form-label">Email</label>
-                <input asp-for="UserData.Email" class="form-control" />
+                <input asp-for="UserData.Email" class="form-control" aria-describedby="emailHelp" />
                 <span asp-validation-for="UserData.Email" class="text-danger"></span>
+                <div id="emailHelp" class="form-text">An email with an unknown domain will create an invite for a guest</div>
             </div>
             <div class="mb-3">
                 <label asp-for="UserData.UsePasswordless" class="form-label">Use Passwordless</label>
