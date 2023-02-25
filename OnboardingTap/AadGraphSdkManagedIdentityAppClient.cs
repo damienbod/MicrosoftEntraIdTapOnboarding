@@ -21,17 +21,6 @@ public class AadGraphSdkManagedIdentityAppClient
         }
     }
 
-    public async Task<int> GetUsersAsync()
-    {
-        var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
-
-        IGraphServiceUsersCollectionPage users = await graphServiceClient.Users
-            .Request()
-            .GetAsync();
-
-        return users.Count;
-    }
-
     public async Task<TemporaryAccessPassAuthenticationMethod?> AddTapForUserAsync(string userId)
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
@@ -52,9 +41,6 @@ public class AadGraphSdkManagedIdentityAppClient
         return result;
     }
 
-    /// <summary>
-    /// Can be a guest or a member
-    /// </summary>
     public async Task<CreatedUserModel> CreateGraphMemberUserAsync(UserModel userModel)
     {
         if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
