@@ -53,8 +53,10 @@
 @if (@Model.AccessInfo!.Email != null)
 {
     <div class="card">
+        <div class="card-header">
+            @Model.AccessInfo!.Email
+        </div>
         <div class="card-body">
-            <h5 class="card-title">@Model.AccessInfo!.Email</h5>
             @if (@Model.AccessInfo!.TemporaryAccessPass != null)
             {
                 <h6 class="card-subtitle mb-2 text-muted">Temporary Access Pass</h6>
