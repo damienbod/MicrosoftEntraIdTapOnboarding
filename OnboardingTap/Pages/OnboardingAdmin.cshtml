@@ -44,9 +44,11 @@
 
 <hr />
 
-<p>Email: @Model.AccessInfo!.Email</p>
-
-@if (@Model.AccessInfo.TemporaryAccessPass != null)
+@if (@Model.AccessInfo != null)
+{
+    <p>Email: @Model.AccessInfo!.Email</p>
+}
+@if (@Model.AccessInfo!.TemporaryAccessPass != null)
 {
     <p>TemporaryAccessPass: @Model.AccessInfo.TemporaryAccessPass</p>
 }
@@ -54,5 +56,7 @@
 {
     <p>Password: @Model.AccessInfo!.Password</p>
 }
-
-
+@if (@Model.AccessInfo.InviteRedeemUrl != null)
+{
+    <p>InviteRedeemUrl: @Model.AccessInfo!.InviteRedeemUrl</p>
+}

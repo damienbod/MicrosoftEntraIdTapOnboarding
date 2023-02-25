@@ -40,53 +40,63 @@ public class OnboardingAdminModel : PageModel
     {
         if (UserData == null) return Page();
 
-        // member user, can use a TAP
         if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
         {
-            var createdUser = await _aadGraphSdkManagedIdentityAppClient
-                .CreateGraphMemberUserAsync(UserData);
-
-            if(createdUser!.Id != null)
-            {
-                // Graph needs a pause here...
-                Thread.Sleep(5000);
-
-                if(UserData.UsePasswordless)
-                {
-                    var tap = await _aadGraphSdkManagedIdentityAppClient.AddTapForUserAsync(createdUser.Id);
-
-                    AccessInfo = new CreatedAccessModel
-                    {
-                        Email = createdUser.Email,
-                        TemporaryAccessPass = tap!.TemporaryAccessPass
-                    };
-                }
-                else
-                {
-                    AccessInfo = new CreatedAccessModel
-                    {
-                        Email = createdUser.Email,
-                        Password= createdUser.Password
-                    };
-                }
-
-            }  
+            // member user, can use a TAP
+            await CreateMember(UserData);
         }
         else
         {
-            var invitedGuestUser = await _aadGraphSdkManagedIdentityAppClient
-                .InviteGuestUser(UserData, "https://localhost:5002");
-
-            if (invitedGuestUser!.Id != null) // guest user, stuck with passwords
-            {
-                AccessInfo = new CreatedAccessModel
-                {
-                    Email = invitedGuestUser.InvitedUserEmailAddress,
-                    InviteRedeemUrl = invitedGuestUser.InviteRedeemUrl
-                };
-            }
+            await InviteGuest(UserData);
         }
 
         return Page();
+    }
+
+    private async Task CreateMember(UserModel userData)
+    {
+        var createdUser = await _aadGraphSdkManagedIdentityAppClient
+                        .CreateGraphMemberUserAsync(userData);
+
+        if (createdUser!.Id != null)
+        {
+            // Graph needs a pause here...
+            Thread.Sleep(5000);
+
+            if (userData.UsePasswordless)
+            {
+                var tap = await _aadGraphSdkManagedIdentityAppClient
+                    .AddTapForUserAsync(createdUser.Id);
+
+                AccessInfo = new CreatedAccessModel
+                {
+                    Email = createdUser.Email,
+                    TemporaryAccessPass = tap!.TemporaryAccessPass
+                };
+            }
+            else
+            {
+                AccessInfo = new CreatedAccessModel
+                {
+                    Email = createdUser.Email,
+                    Password = createdUser.Password
+                };
+            }
+        }
+    }
+
+    private async Task InviteGuest(UserModel userData)
+    {
+        var invitedGuestUser = await _aadGraphSdkManagedIdentityAppClient
+                        .InviteGuestUser(userData, "https://localhost:5002");
+
+        if (invitedGuestUser!.Id != null)
+        {
+            AccessInfo = new CreatedAccessModel
+            {
+                Email = invitedGuestUser.InvitedUserEmailAddress,
+                InviteRedeemUrl = invitedGuestUser.InviteRedeemUrl
+            };
+        }
     }
 }
