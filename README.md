@@ -15,7 +15,7 @@
 ### Open tasks
 
 - Add documentation of the different onboarding flows
-- Switch to delegated Graph permissions
+- Evaluate or switch to delegated Graph permissions
 - Evaluate this with a Multi-tenant App Registration using delegated flows
 
 ## Using Temporary Access Pass (TAP) with members
