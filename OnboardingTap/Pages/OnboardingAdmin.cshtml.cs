@@ -8,6 +8,7 @@ public class OnboardingAdminModel : PageModel
 {
     private readonly AadGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
     private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
+    private readonly string _inviteUrl = "https://localhost:5002";
 
     public OnboardingAdminModel(AadGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient,
         IConfiguration configuration)
@@ -17,6 +18,11 @@ public class OnboardingAdminModel : PageModel
         if (aadDomain != null)
         {
             _aadIssuerDomain = aadDomain;
+        }
+        var inviteUrl = configuration.GetValue<string>("InviteUrl");
+        if (inviteUrl != null)
+        {
+            _inviteUrl = inviteUrl;
         }
     }
 
@@ -96,7 +102,7 @@ public class OnboardingAdminModel : PageModel
     private async Task InviteGuest(UserModel userData)
     {
         var invitedGuestUser = await _aadGraphSdkManagedIdentityAppClient
-                        .InviteGuestUser(userData, "https://localhost:5002");
+                        .InviteGuestUser(userData, _inviteUrl);
 
         if (invitedGuestUser!.Id != null)
         {
