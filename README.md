@@ -52,13 +52,13 @@ Application
 
 Add this to the user secrets for local development with the values from your Azure App registration. Use an Azure Key vault for deployments and move the certificates or Managed identities.
 
-```
-  "AzureAd": {
-    "ClientSecret": "--your-secret--"
-  },
-  "AzureAdGraph": {
-    "ClientSecret": "--your-secret--"
-  }
+```json
+"AzureAd": {
+	"ClientSecret": "--your-secret--"
+},
+"AzureAdGraph": {
+	"ClientSecret": "--your-secret--"
+}
 ```
 
 ## Setup app.settings
