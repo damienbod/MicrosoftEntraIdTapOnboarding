@@ -1,5 +1,9 @@
 # Azure AD Temporary Access Pass (TAP) Onboarding
 
+Onboarding Azure AD users with support for Azure AD Temporary Access Pass (TAP) Onboarding
+
+Guest users are sent Graph invitations, AAD memebers can be onboarding using passwordless or the old password way.
+
 [![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
 
 ## Test Cases
