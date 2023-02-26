@@ -50,7 +50,8 @@ Application
 
 ## Setup secrets:
 
-Add this to the user secrets for local development with the values from your Azure App Registration. Use an Azure Key vault for deployments and move the certificates or Managed identities.
+Add this to the user secrets for local development with the values from your Azure App registration. Use an Azure Key vault for deployments and move the certificates or Managed identities.
+
 ```
   "AzureAd": {
     "ClientSecret": "--your-secret--"
@@ -59,6 +60,10 @@ Add this to the user secrets for local development with the values from your Azu
     "ClientSecret": "--your-secret--"
   }
 ```
+
+## Setup app.settings
+
+Replace the configurations with the data from your Azure App registrations.
 
 # Links
 
