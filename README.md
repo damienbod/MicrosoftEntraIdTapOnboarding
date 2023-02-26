@@ -7,8 +7,9 @@
 - [good] A member flow with TAP and FIDO2 auth 
 - [good] A member flow with password using email/password auth
 - [good] A member flow with password setup and a phone auth
-- A guest flow with email code
 - [good] A guest flow with federated login
+- [good] A guest flow with Microsoft account
+- [good] A guest flow with email code
 - A guest flow with phone login (is this possible?)
 
 ### Open tasks
@@ -21,6 +22,8 @@
 
 Note: TAP only works with members and a passwordless authentication once setup
 
+https://aka.ms/mysecurityinfo
+
 ## Creating AAD member users
 
 Users are created on the tenant with a known or registered domain. The member user can use a TAP to onboard or a password.
@@ -32,6 +35,18 @@ When using TAP, no password is returned and the user must register a FIDO2 key, 
 And email with a domain unknown or not registered on the tenant will be created using an invite.
 
 TAP cannot be used for guests.
+
+Note for live or Microsoft accounts the security info is at:
+
+https://account.microsoft.com/security
+
+## Graph permissions
+
+Application
+
+- User.EnableDisableAccount.All
+- User.ReadWrite.All
+- UserAuthenticationMethod.ReadWrite.All
 
 # Links
 
