@@ -4,13 +4,13 @@
 
 ## Test Cases
 
-- [good] A member flow with TAP and FIDO2 auth 
-- [good] A member flow with password using email/password auth
-- [good] A member flow with password setup and a phone auth
-- [good] A guest flow with federated login
-- [good] A guest flow with Microsoft account
-- [good] A guest flow with email code
-- A guest flow with phone login (is this possible?)
+- [good] A member user flow with TAP and FIDO2 authentication
+- [good] A member user flow with password using email/password authentication
+- [good] A member user flow with password setup and a phone authentication
+- [good] A guest user flow with federated login
+- [good] A guest user flow with Microsoft account
+- [good] A guest user flow with email code
+- A guest user flow with phone login (is this possible?)
 
 ### Open tasks
 
