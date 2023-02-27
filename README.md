@@ -6,6 +6,8 @@ Guest users are sent Graph invitations, AAD memebers can be onboarded using pass
 
 [![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
 
+[blog](https://damienbod.com/2023/02/27/onboarding-users-in-asp-net-core-using-azure-ad-temporary-access-pass-and-microsoft-graph/)
+
 ## Test Cases
 
 - [good] A member user flow with TAP and FIDO2 authentication
