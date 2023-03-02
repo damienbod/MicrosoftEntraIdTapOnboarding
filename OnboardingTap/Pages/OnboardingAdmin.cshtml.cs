@@ -69,7 +69,7 @@ public class OnboardingAdminModel : PageModel
         {
             if (userData.UsePasswordless)
             {
-                var maxRetryAttempts = 7;
+                var maxRetryAttempts = 20;
                 var pauseBetweenFailures = TimeSpan.FromSeconds(3);
 
                 var retryPolicy = Policy
