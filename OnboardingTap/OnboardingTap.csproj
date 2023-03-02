@@ -10,11 +10,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.3" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.26.0" />
-    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraphBeta" Version="1.26.0" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.26.0" />
-    <PackageReference Include="Microsoft.Identity.Web.Certificate" Version="1.26.0" />
-    <PackageReference Include="Microsoft.Identity.Web.TokenCache" Version="1.26.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.5.0" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraphBeta" Version="2.5.0" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.5.0" />
+    <PackageReference Include="Microsoft.Identity.Web.Certificate" Version="2.5.0" />
+    <PackageReference Include="Microsoft.Identity.Web.TokenCache" Version="2.5.0" />
     <PackageReference Include="Polly" Version="7.2.3" />
   </ItemGroup>
 
