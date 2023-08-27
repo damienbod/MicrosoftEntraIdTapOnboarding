@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graph;
+using Microsoft.Graph.Models;
 using OnboardingTap.Pages;
 using System.Security.Cryptography;
 
@@ -25,7 +26,7 @@ public class AadGraphSdkManagedIdentityAppClient
     {
         var graphServiceClient = _graphService.GetGraphClientWithManagedIdentityOrDevClient();
 
-        var tempAccessPassAuthMethod = new TemporaryAccessPassAuthenticationMethod
+        TemporaryAccessPassAuthenticationMethod tempAccessPassAuthMethod = new()
         {
             //StartDateTime = DateTimeOffset.Now,
             LifetimeInMinutes = 60,
@@ -35,8 +36,7 @@ public class AadGraphSdkManagedIdentityAppClient
         var result = await graphServiceClient.Users[userId]
             .Authentication
             .TemporaryAccessPassMethods
-            .Request()
-            .AddAsync(tempAccessPassAuthMethod);
+            .PostAsync(tempAccessPassAuthMethod);
 
         return result;
     }
@@ -80,13 +80,12 @@ public class AadGraphSdkManagedIdentityAppClient
         };
 
         var createdUser = await graphServiceClient.Users
-            .Request()
-            .AddAsync(user);
+            .PostAsync(user);
 
         return new CreatedUserModel
         {
-            Email = createdUser.UserPrincipalName,
-            Id = createdUser.Id,
+            Email = createdUser!.UserPrincipalName!,
+            Id = createdUser.Id!,
             Password = password
         };
     }
@@ -109,9 +108,9 @@ public class AadGraphSdkManagedIdentityAppClient
             InvitedUserType = "guest"
         };
 
-        var invite = await graphServiceClient.Invitations
-            .Request()
-            .AddAsync(invitation);
+        var invite = await graphServiceClient
+            .Invitations
+            .PostAsync(invitation);
 
         return invite;
     }
