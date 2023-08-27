@@ -71,6 +71,10 @@ Add this to the user secrets for local development with the values from your Azu
 
 Replace the configurations with the data from your Azure App registrations.
 
+## History
+
+2023-08-27 Updated packages, Graph 5
+
 # Links
 
 https://entra.microsoft.com/
