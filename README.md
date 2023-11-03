@@ -73,7 +73,8 @@ Replace the configurations with the data from your Azure App registrations.
 
 ## History
 
-2023-08-27 Updated packages, Graph 5
+- 2023-11-03 Updated packages
+- 2023-08-27 Updated packages, Graph 5
 
 # Links
 

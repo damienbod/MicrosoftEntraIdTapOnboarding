@@ -27,7 +27,7 @@ public class OnboardingAdminModel : PageModel
     }
 
     [BindProperty]
-    public UserModel? UserData { get; set; } = new UserModel();
+    public UserModel UserData { get; set; } = new UserModel();
 
     [BindProperty]
     public CreatedAccessModel? AccessInfo { get; set; } = new CreatedAccessModel();
