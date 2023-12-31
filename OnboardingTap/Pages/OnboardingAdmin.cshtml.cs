@@ -73,19 +73,37 @@ public class OnboardingAdminModel : PageModel
                 var pauseBetweenFailures = TimeSpan.FromSeconds(3);
 
                 var retryPolicy = Policy
-                    .Handle<HttpRequestException>()
+                    .Handle<ArgumentException>()
                     .WaitAndRetryAsync(maxRetryAttempts, i => pauseBetweenFailures);
 
                 await retryPolicy.ExecuteAsync(async () =>
                 {
-                    var tap = await _meIdGraphSdkManagedIdentityAppClient
+                    try
+                    {
+                        var tap = await _meIdGraphSdkManagedIdentityAppClient
                         .AddTapForUserAsync(createdUser.Id);
 
-                    AccessInfo = new CreatedAccessModel
+                        AccessInfo = new CreatedAccessModel
+                        {
+                            Email = createdUser.Email,
+                            TemporaryAccessPass = tap!.TemporaryAccessPass
+                        };
+                    }
+                    catch (Exception ex)
                     {
-                        Email = createdUser.Email,
-                        TemporaryAccessPass = tap!.TemporaryAccessPass
-                    };
+                        // handle expected errors
+                        if(ex.GetType() == typeof(HttpRequestException))
+                            throw new ArgumentException(ex.Message);
+
+                        if (ex.GetType() == typeof(Microsoft.Graph.Models.ODataErrors.ODataError))
+                        { 
+                            throw new ArgumentException(ex.Message);
+                        }
+
+                        // return 500 to UI
+                        throw;
+                    }
+                    
                 });
             }
             else
