@@ -6,14 +6,14 @@ namespace OnboardingTap.Pages;
 
 public class OnboardingAdminModel : PageModel
 {
-    private readonly MeIdGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
+    private readonly MeIdGraphSdkManagedIdentityAppClient _meIdGraphSdkManagedIdentityAppClient;
     private readonly string _microsoftEntraIDIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
     private readonly string _inviteUrl = "https://localhost:5002";
 
-    public OnboardingAdminModel(MeIdGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient,
+    public OnboardingAdminModel(MeIdGraphSdkManagedIdentityAppClient meidGraphSdkManagedIdentityAppClient,
         IConfiguration configuration)
     {
-        _aadGraphSdkManagedIdentityAppClient = aadGraphSdkManagedIdentityAppClient;
+        _meIdGraphSdkManagedIdentityAppClient = meidGraphSdkManagedIdentityAppClient;
         var microsoftEntraIDIssuerDomain = configuration.GetValue<string>("MicrosoftEntraIDIssuerDomain");
         if (microsoftEntraIDIssuerDomain != null)
         {
@@ -62,7 +62,7 @@ public class OnboardingAdminModel : PageModel
 
     private async Task CreateMember(UserModel userData)
     {
-        var createdUser = await _aadGraphSdkManagedIdentityAppClient
+        var createdUser = await _meIdGraphSdkManagedIdentityAppClient
                         .CreateGraphMemberUserAsync(userData);
 
         if (createdUser!.Id != null)
@@ -78,7 +78,7 @@ public class OnboardingAdminModel : PageModel
 
                 await retryPolicy.ExecuteAsync(async () =>
                 {
-                    var tap = await _aadGraphSdkManagedIdentityAppClient
+                    var tap = await _meIdGraphSdkManagedIdentityAppClient
                         .AddTapForUserAsync(createdUser.Id);
 
                     AccessInfo = new CreatedAccessModel
@@ -101,7 +101,7 @@ public class OnboardingAdminModel : PageModel
 
     private async Task InviteGuest(UserModel userData)
     {
-        var invitedGuestUser = await _aadGraphSdkManagedIdentityAppClient
+        var invitedGuestUser = await _meIdGraphSdkManagedIdentityAppClient
                         .InviteGuestUser(userData, _inviteUrl);
 
         if (invitedGuestUser!.Id != null)

@@ -2,7 +2,7 @@
 
 Onboarding Microsoft Entra ID users with support for Microsoft Entra ID Temporary Access Pass (TAP)
 
-Guest users are sent Graph invitations, AAD memebers can be onboarded using passwordless or the old password way.
+Guest users are sent Graph invitations, ME ID members can be onboarded using passwordless or the old password way.
 
 [![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
 
@@ -30,13 +30,13 @@ Note: TAP only works with members and a passwordless authentication once setup
 
 https://aka.ms/mysecurityinfo
 
-## Creating AAD member users
+## Creating Microsoft Entra ID member users
 
 Users are created on the tenant with a known or registered domain. The member user can use a TAP to onboard or a password.
 
 When using TAP, no password is returned and the user must register a FIDO2 key, etc.
 
-## Creating AAD guest users
+## Creating Microsoft Entra ID guest users
 
 And email with a domain unknown or not registered on the tenant will be created using an invite.
 
