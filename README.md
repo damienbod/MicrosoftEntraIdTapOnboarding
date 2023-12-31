@@ -4,7 +4,7 @@ Onboarding Microsoft Entra ID users with support for Microsoft Entra ID Temporar
 
 Guest users are sent Graph invitations, ME ID members can be onboarded using passwordless or the old password way.
 
-[![.NET](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/AzureAdTapOnboarding/actions/workflows/dotnet.yml)
+[![.NET](https://github.com/damienbod/MicrosoftEntraIdTapOnboarding/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/MicrosoftEntraIdTapOnboarding/actions/workflows/dotnet.yml)
 
 [blog](https://damienbod.com/2023/02/27/onboarding-users-in-asp-net-core-using-azure-ad-temporary-access-pass-and-microsoft-graph/)
 
