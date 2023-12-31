@@ -11,7 +11,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddSingleton<GraphApplicationClientService>();
-        builder.Services.AddScoped<AadGraphSdkManagedIdentityAppClient>();
+        builder.Services.AddScoped<MeIdGraphSdkManagedIdentityAppClient>();
 
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));

@@ -1,24 +1,23 @@
-﻿using Microsoft.Graph;
-using Microsoft.Graph.Models;
+﻿using Microsoft.Graph.Models;
 using OnboardingTap.Pages;
 using System.Security.Cryptography;
 
 namespace OnboardingTap;
 
-public class AadGraphSdkManagedIdentityAppClient
+public class MeIdGraphSdkManagedIdentityAppClient
 {
     private readonly GraphApplicationClientService _graphService;
-    private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
+    private readonly string _microsoftEntraIdIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
 
-    public AadGraphSdkManagedIdentityAppClient(IConfiguration configuration, 
+    public MeIdGraphSdkManagedIdentityAppClient(IConfiguration configuration,
         GraphApplicationClientService graphService)
     {
         _graphService = graphService;
 
-        var aadDomain = configuration.GetValue<string>("AadIssuerDomain");
-        if(aadDomain != null)
+        var microsoftEntraIdIssuerDomain = configuration.GetValue<string>("MicrosoftEntraIDIssuerDomain");
+        if (microsoftEntraIdIssuerDomain != null)
         {
-            _aadIssuerDomain = aadDomain;
+            _microsoftEntraIdIssuerDomain = microsoftEntraIdIssuerDomain;
         }
     }
 
@@ -30,7 +29,7 @@ public class AadGraphSdkManagedIdentityAppClient
         {
             //StartDateTime = DateTimeOffset.Now,
             LifetimeInMinutes = 60,
-            IsUsableOnce = true, 
+            IsUsableOnce = true,
         };
 
         var result = await graphServiceClient.Users[userId]
@@ -43,7 +42,7 @@ public class AadGraphSdkManagedIdentityAppClient
 
     public async Task<CreatedUserModel> CreateGraphMemberUserAsync(UserModel userModel)
     {
-        if (!userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        if (!userModel.Email.ToLower().EndsWith(_microsoftEntraIdIssuerDomain.ToLower()))
         {
             throw new ArgumentException("A guest user must be invited!");
         }
@@ -66,7 +65,7 @@ public class AadGraphSdkManagedIdentityAppClient
             //    new ObjectIdentity
             //    {
             //        SignInType = "federated",
-            //        Issuer = _aadIssuerDomain, 
+            //        Issuer = _microsoftEntraIDIssuerDomain, 
             //        IssuerAssignedId = userModel.Email
             //    }
             //},
@@ -92,7 +91,7 @@ public class AadGraphSdkManagedIdentityAppClient
 
     public async Task<Invitation?> InviteGuestUser(UserModel userModel, string redirectUrl)
     {
-        if (userModel.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        if (userModel.Email.ToLower().EndsWith(_microsoftEntraIdIssuerDomain.ToLower()))
         {
             throw new ArgumentException("user must be from a different domain!");
         }
