@@ -6,11 +6,11 @@ namespace OnboardingTap.Pages;
 
 public class OnboardingAdminModel : PageModel
 {
-    private readonly AadGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
+    private readonly MeIdGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
     private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
     private readonly string _inviteUrl = "https://localhost:5002";
 
-    public OnboardingAdminModel(AadGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient,
+    public OnboardingAdminModel(MeIdGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient,
         IConfiguration configuration)
     {
         _aadGraphSdkManagedIdentityAppClient = aadGraphSdkManagedIdentityAppClient;
