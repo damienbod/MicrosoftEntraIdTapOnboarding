@@ -56,7 +56,7 @@ public class AadGraphSdkManagedIdentityAppClient
             DisplayName = userModel.UserName,
             Surname = userModel.LastName,
             GivenName = userModel.FirstName,
-            OtherMails = new List<string> { userModel.Email },
+            OtherMails = [userModel.Email],
             UserType = "member",
             AccountEnabled = true,
             UserPrincipalName = userModel.Email,
