@@ -14,7 +14,7 @@ public class MeIdGraphSdkManagedIdentityAppClient
     {
         _graphService = graphService;
 
-        var microsoftEntraIdIssuerDomain = configuration.GetValue<string>("AadIssuerDomain");
+        var microsoftEntraIdIssuerDomain = configuration.GetValue<string>("MicrosoftEntraIDIssuerDomain");
         if (microsoftEntraIdIssuerDomain != null)
         {
             _microsoftEntraIdIssuerDomain = microsoftEntraIdIssuerDomain;
@@ -65,7 +65,7 @@ public class MeIdGraphSdkManagedIdentityAppClient
             //    new ObjectIdentity
             //    {
             //        SignInType = "federated",
-            //        Issuer = _aadIssuerDomain, 
+            //        Issuer = _microsoftEntraIDIssuerDomain, 
             //        IssuerAssignedId = userModel.Email
             //    }
             //},

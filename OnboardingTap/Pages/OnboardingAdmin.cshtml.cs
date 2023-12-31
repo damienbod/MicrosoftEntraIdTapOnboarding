@@ -7,17 +7,17 @@ namespace OnboardingTap.Pages;
 public class OnboardingAdminModel : PageModel
 {
     private readonly MeIdGraphSdkManagedIdentityAppClient _aadGraphSdkManagedIdentityAppClient;
-    private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
+    private readonly string _microsoftEntraIDIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
     private readonly string _inviteUrl = "https://localhost:5002";
 
     public OnboardingAdminModel(MeIdGraphSdkManagedIdentityAppClient aadGraphSdkManagedIdentityAppClient,
         IConfiguration configuration)
     {
         _aadGraphSdkManagedIdentityAppClient = aadGraphSdkManagedIdentityAppClient;
-        var aadDomain = configuration.GetValue<string>("AadIssuerDomain");
-        if (aadDomain != null)
+        var microsoftEntraIDIssuerDomain = configuration.GetValue<string>("MicrosoftEntraIDIssuerDomain");
+        if (microsoftEntraIDIssuerDomain != null)
         {
-            _aadIssuerDomain = aadDomain;
+            _microsoftEntraIDIssuerDomain = microsoftEntraIDIssuerDomain;
         }
         var inviteUrl = configuration.GetValue<string>("InviteUrl");
         if (inviteUrl != null)
@@ -36,7 +36,7 @@ public class OnboardingAdminModel : PageModel
     {
         UserData = new UserModel
         {
-            Email = $"tst5@{_aadIssuerDomain}",
+            Email = $"tst5@{_microsoftEntraIDIssuerDomain}",
             UserName = "tst5",
             LastName = "last-tst5",
             FirstName = "first-tst5"
@@ -47,7 +47,7 @@ public class OnboardingAdminModel : PageModel
     {
         if (UserData == null) return Page();
 
-        if (UserData.Email.ToLower().EndsWith(_aadIssuerDomain.ToLower()))
+        if (UserData.Email.ToLower().EndsWith(_microsoftEntraIDIssuerDomain.ToLower()))
         {
             // member user, can use a TAP
             await CreateMember(UserData);
