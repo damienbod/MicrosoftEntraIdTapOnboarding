@@ -62,7 +62,7 @@ Add this to the user secrets for local development with the values from your Azu
 "AzureAd": {
 	"ClientSecret": "--your-secret--"
 },
-"AzureAdGraph": {
+"MicrosoftEntraIDGraph": {
 	"ClientSecret": "--your-secret--"
 }
 ```
