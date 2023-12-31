@@ -1,6 +1,6 @@
-# Azure AD Temporary Access Pass (TAP) Onboarding
+# Microsoft Entra ID Temporary Access Pass (TAP) Onboarding
 
-Onboarding Azure AD users with support for Azure AD Temporary Access Pass (TAP)
+Onboarding Microsoft Entra ID users with support for Microsoft Entra ID Temporary Access Pass (TAP)
 
 Guest users are sent Graph invitations, AAD memebers can be onboarded using passwordless or the old password way.
 
@@ -73,6 +73,7 @@ Replace the configurations with the data from your Azure App registrations.
 
 ## History
 
+- 2023-12-31 .NET 8, Updated packages
 - 2023-11-03 Updated packages
 - 2023-08-27 Updated packages, Graph 5
 
