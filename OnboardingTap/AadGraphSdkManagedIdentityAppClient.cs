@@ -1,5 +1,4 @@
-﻿using Microsoft.Graph;
-using Microsoft.Graph.Models;
+﻿using Microsoft.Graph.Models;
 using OnboardingTap.Pages;
 using System.Security.Cryptography;
 
@@ -10,13 +9,13 @@ public class AadGraphSdkManagedIdentityAppClient
     private readonly GraphApplicationClientService _graphService;
     private readonly string _aadIssuerDomain = "damienbodsharepoint.onmicrosoft.com";
 
-    public AadGraphSdkManagedIdentityAppClient(IConfiguration configuration, 
+    public AadGraphSdkManagedIdentityAppClient(IConfiguration configuration,
         GraphApplicationClientService graphService)
     {
         _graphService = graphService;
 
         var aadDomain = configuration.GetValue<string>("AadIssuerDomain");
-        if(aadDomain != null)
+        if (aadDomain != null)
         {
             _aadIssuerDomain = aadDomain;
         }
@@ -30,7 +29,7 @@ public class AadGraphSdkManagedIdentityAppClient
         {
             //StartDateTime = DateTimeOffset.Now,
             LifetimeInMinutes = 60,
-            IsUsableOnce = true, 
+            IsUsableOnce = true,
         };
 
         var result = await graphServiceClient.Users[userId]
