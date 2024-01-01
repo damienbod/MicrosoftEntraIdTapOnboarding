@@ -60,15 +60,6 @@ public class MeIdGraphSdkManagedIdentityAppClient
             AccountEnabled = true,
             UserPrincipalName = userModel.Email,
             MailNickname = userModel.UserName,
-            //Identities = new List<ObjectIdentity>()
-            //{
-            //    new ObjectIdentity
-            //    {
-            //        SignInType = "federated",
-            //        Issuer = _microsoftEntraIDIssuerDomain, 
-            //        IssuerAssignedId = userModel.Email
-            //    }
-            //},
             PasswordProfile = new PasswordProfile
             {
                 Password = password,
