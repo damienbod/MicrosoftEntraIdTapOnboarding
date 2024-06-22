@@ -92,18 +92,18 @@ public class OnboardingAdminModel : PageModel
                     catch (Exception ex)
                     {
                         // handle expected errors
-                        if(ex.GetType() == typeof(HttpRequestException))
+                        if (ex.GetType() == typeof(HttpRequestException))
                             throw new ArgumentException(ex.Message);
 
                         if (ex.GetType() == typeof(Microsoft.Graph.Models.ODataErrors.ODataError))
-                        { 
+                        {
                             throw new ArgumentException(ex.Message);
                         }
 
                         // return 500 to UI
                         throw;
                     }
-                    
+
                 });
             }
             else
