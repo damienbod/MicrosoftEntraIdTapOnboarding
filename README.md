@@ -73,6 +73,7 @@ Replace the configurations with the data from your Azure App registrations.
 
 ## History
 
+- 2025-05-10 Updated packages
 - 2025-01-05 Updated packages, .NET 9, Bootstrap 5
 - 2024-11-03 Updated packages
 - 2024-06-22 Updated packages
