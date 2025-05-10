@@ -24,7 +24,7 @@ public class GraphApplicationClientService
         if (_graphServiceClient != null)
             return _graphServiceClient;
 
-        string[] scopes = new[] { "https://graph.microsoft.com/.default" };
+        string[] scopes = ["https://graph.microsoft.com/.default"];
 
         var chainedTokenCredential = GetChainedTokenCredentials();
         _graphServiceClient = new GraphServiceClient(chainedTokenCredential, scopes);
